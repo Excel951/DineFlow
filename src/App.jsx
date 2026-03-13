@@ -2,7 +2,7 @@ import React from 'react';
 import FoodMenu from './pages/FoodMenu';
 
 const App = () => {
-  return <FoodMenu/>;
+    return <FoodMenu/>;
 };
 
 export default App;
