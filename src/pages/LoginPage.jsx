@@ -1,45 +1,62 @@
-import { useState } from "react";
+import { useActionState, useEffect } from "react";
 import Input from "../components/Input";
 import { Box, Paper, Typography, Button } from "@mui/material";
 import { authActions } from "../store/Auth-redux";
+import { isEmail, isNotEmpty, hasMinLength } from "../utils/validation.js";
 import { useDispatch, useSelector } from "react-redux";
+
+function loginAction(prevFormState, formData) {
+  const data = Object.fromEntries(formData);
+  let errors = [];
+
+  if (!isNotEmpty(data.email) && !isEmail(data.email) && !hasMinLength()) {
+    errors.push("Email tidak valid");
+  }
+
+  if (!isNotEmpty(data.password) && !hasMinLength(data.password, 6)) {
+    errors.push("Isi Email dan Password");
+  }
+
+  if (errors.length > 0) {
+    return {
+      errors,
+      success: false,
+      enteredValues: {
+        email: data.email,
+        password: data.password,
+      },
+    };
+  }
+
+  return {
+    errors: null,
+    success: true,
+    enteredValues: {
+      email: data.email,
+      password: data.password,
+    },
+  };
+}
 
 const LoginPage = () => {
   const dispatch = useDispatch();
 
   const { userName, password } = useSelector((state) => state.auth);
-  const [errors, setErrors] = useState([]);
 
-  const changeUsernameHandler = (event) => {
-    dispatch(authActions.setUsername(event.target.value));
-  };
+  const [formState, formAction, isPending] = useActionState(loginAction, {
+    error: null,
+  });
 
-  const changePasswordHandler = (event) => {
-    dispatch(authActions.setPassword(event.target.value));
-  };
+  const errors = formState.errors;
 
-  const loginHandle = (event) => {
-    event.preventDefault();
-    let newErrors = [];
+  console.log(formState);
 
-    if (!userName || !userName.includes("@")) {
-      newErrors.push("Email tidak valid");
+  useEffect(() => {
+    if (formState.success === true) {
+      dispatch(authActions.setUsername(formState.enteredValues.email));
+      dispatch(authActions.setPassword(formState.enteredValues.password));
     }
-
-    if (!password || password.length < 6) {
-      newErrors.push("Password minimal 6 karakter");
-    }
-
-    setErrors(newErrors);
-
-    // kalau ada error → stop
-    if (errors.length > 0) {
-      console.log("Form error ❌", newErrors);
-      return;
-    }
-
-    dispatch(authActions.login());
-  };
+  }, [formState, dispatch]);
 
   /* ganti redux biar bisa 1 file code sama signup */
 
@@ -95,7 +112,7 @@ const LoginPage = () => {
         backgroundColor: "#FFC15E", // Warm Yellow
       }}
     >
-      <form onSubmit={loginHandle}>
+      <form action={formAction}>
         <Paper
           elevation={6}
           sx={{
@@ -118,17 +135,13 @@ const LoginPage = () => {
             Login Karyawan
           </Typography>
 
-          <Input
-            label="email"
-            onChangeName={changeUsernameHandler}
-            value={userName}
-          />
+          <Input label="email" name="email" defaultValue={userName} />
 
           <Input
             label="password"
-            onChangeName={changePasswordHandler}
             type="password"
-            value={password}
+            name="password"
+            defaultValue={password}
           />
           {errors
             ? errors.map((error) => <p style={{ color: "red" }}>{error}</p>)
@@ -150,6 +163,7 @@ const LoginPage = () => {
               fontSize: "1rem",
               mt: 2,
             }}
+            disabled={isPending}
             type="submit"
           >
             Login
