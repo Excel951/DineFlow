@@ -2,49 +2,17 @@ import { useActionState, useEffect } from "react";
 import Input from "../components/Input";
 import { Box, Paper, Typography, Button } from "@mui/material";
 import { authActions } from "../store/Auth-redux";
-import { isEmail, isNotEmpty, hasMinLength } from "../utils/validation.js";
+import { loginAction } from "../actions/Auth-Actions";
 import { useDispatch, useSelector } from "react-redux";
 
-function loginAction(prevFormState, formData) {
-  const data = Object.fromEntries(formData);
-  let errors = [];
-
-  if (!isNotEmpty(data.email) && !isEmail(data.email) && !hasMinLength()) {
-    errors.push("Email tidak valid");
-  }
-
-  if (!isNotEmpty(data.password) && !hasMinLength(data.password, 6)) {
-    errors.push("Isi Email dan Password");
-  }
-
-  if (errors.length > 0) {
-    return {
-      errors,
-      success: false,
-      enteredValues: {
-        email: data.email,
-        password: data.password,
-      },
-    };
-  }
-
-  return {
-    errors: null,
-    success: true,
-    enteredValues: {
-      email: data.email,
-      password: data.password,
-    },
-  };
-}
-
-const LoginPage = () => {
+export default function LoginPage() {
   const dispatch = useDispatch();
 
   const { userName, password } = useSelector((state) => state.auth);
 
   const [formState, formAction, isPending] = useActionState(loginAction, {
     error: null,
+    success: false,
   });
 
   const errors = formState.errors;
@@ -172,6 +140,4 @@ const LoginPage = () => {
       </form>
     </Box>
   );
-};
-
-export default LoginPage;
+}
