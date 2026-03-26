@@ -1,6 +1,6 @@
 import { TextField } from "@mui/material";
 
-export default function Input({ label, value, type = "text", onChangeName }) {
+export default function Input({ label, value, type = "text", ...props }) {
   return (
     <TextField
       id="emailField"
@@ -9,8 +9,8 @@ export default function Input({ label, value, type = "text", onChangeName }) {
       variant="outlined"
       fullWidth
       value={value}
-      onChange={onChangeName}
       sx={{ mb: 2 }}
+      {...props}
     />
   );
 }
