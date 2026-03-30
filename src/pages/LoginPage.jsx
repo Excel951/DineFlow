@@ -26,49 +26,6 @@ export default function LoginPage() {
     }
   }, [formState, dispatch]);
 
-  /* ganti redux biar bisa 1 file code sama signup */
-
-  // const [login, setLogin] = useState({
-  //   loginInfo: { email: "", password: "" },
-  // });
-  // const [errors, setErrors] = useState(false);
-
-  // const handleLogin = (event) => {
-  //   event.preventDefault();
-
-  //   const { email, password } = login.loginInfo;
-
-  //   // Perform validation
-  //   const hasError = !email || !email.includes("@") || !password;
-
-  //   // Update state based on the validation result
-  //   setErrors(hasError);
-
-  //   // Act based on the validation result
-  //   if (hasError) {
-  //     console.log("Data tidak terkirim");
-  //     return;
-  //   }
-
-  //   console.log("Data terkirim");
-  //   console.log(login);
-  // };
-
-  // function handleLoginInfo(key, value) {
-  //   setLogin((prevLogin) => ({
-  //     ...prevLogin,
-  //     loginInfo: {
-  //       ...prevLogin.loginInfo,
-  //       [key]: value,
-  //     },
-  //   }));
-
-  //   // If there was an error, and the user is typing, hide the error message.
-  //   if (errors) {
-  //     setErrors(false);
-  //   }
-  // }
-
   return (
     <Box
       sx={{
