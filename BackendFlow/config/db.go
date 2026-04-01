@@ -2,13 +2,14 @@ package config
 
 import (
 	"BackEndFlow/models"
+	"os"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 func NewDatabase() *gorm.DB {
-	db, err := gorm.Open(sqlite.Open("api.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(os.Getenv("DB_PATH")), &gorm.Config{})
 
 	if err != nil {
 		panic(err)
