@@ -1,20 +1,34 @@
 package config
 
 import (
-	"database/sql"
+	"BackEndFlow/models"
 
-	_ "github.com/mattn/go-sqlite3"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
-func NewDatabase() *sql.DB {
-	db, err := sql.Open("sqlite3", "DineFlow.db")
+func NewDatabase() *gorm.DB {
+	db, err := gorm.Open(sqlite.Open("api.db"), &gorm.Config{})
 
 	if err != nil {
 		panic(err)
 	}
 
-	db.SetMaxOpenConns(25)
-	db.SetMaxIdleConns(5)
+	db.AutoMigrate(
+		models.User{},
+		models.Product{},
+		models.Order{},
+		models.Category{},
+		models.OrderItem{},
+	)
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		panic(err)
+	}
+
+	sqlDB.SetMaxOpenConns(25)
+	sqlDB.SetMaxIdleConns(5)
 
 	return db
 }
