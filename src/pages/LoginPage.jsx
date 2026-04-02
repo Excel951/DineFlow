@@ -72,7 +72,7 @@ export default function LoginPage() {
             ? errors.map((error) => <p style={{ color: "red" }}>{error}</p>)
             : null}
 
-          <Button
+          <button
             variant="contained"
             size="large"
             fullWidth
@@ -92,7 +92,7 @@ export default function LoginPage() {
             type="submit"
           >
             Login
-          </Button>
+          </button>
         </Paper>
       </form>
     </Box>

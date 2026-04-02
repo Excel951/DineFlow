@@ -108,7 +108,7 @@ export default function SignUpPage() {
               name="confirmPassword"
             />
 
-            <Button
+            <button
               fullWidth
               variant="contained"
               type="submit"
@@ -125,7 +125,7 @@ export default function SignUpPage() {
               ) : (
                 "Daftarkan Akun"
               )}
-            </Button>
+            </button>
           </form>
 
           {/* Footer Info */}

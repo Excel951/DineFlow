@@ -105,7 +105,7 @@ export default function MenuManagement() {
                             </Typography>
                         </div>
 
-                        <Button
+                        <button
                             variant="contained"
                             startIcon={<Plus size={20}/>}
                             className="bg-orange-500 hover:bg-orange-600 rounded-xl py-3 px-6 font-bold capitalize shadow-lg shadow-orange-200 w-full sm:w-auto"
@@ -113,7 +113,7 @@ export default function MenuManagement() {
                             onClick={() => handleOpenCreateModal()}
                         >
                             Tambah Menu Baru
-                        </Button>
+                        </button>
                     </div>
                 </Container>
             </Box>
@@ -276,7 +276,7 @@ export default function MenuManagement() {
                         helperText={localErrors?.image?.[0]}
                     />
 
-                    <Button
+                    <button
                         type="submit"
                         fullWidth
                         variant="contained"
@@ -286,7 +286,7 @@ export default function MenuManagement() {
                         }`}
                     >
                         {isPending ? "Menyimpan..." : (editingItem ? "Simpan Perubahan" : "Tambahkan Menu")}
-                    </Button>
+                    </button>
                 </form>
             </Modal>
 
@@ -297,18 +297,18 @@ export default function MenuManagement() {
                     Apakah Anda yakin ingin menghapus menu ini? Tindakan ini tidak dapat dibatalkan.
                 </Typography>
                 <div className="flex justify-end gap-3">
-                    <Button
+                    <button
                         onClick={() => deleteModalRef.current.close()}
                         className="bg-gray-100 text-gray-500 hover:bg-gray-200 rounded-xl font-bold px-5 py-2"
                     >
                         Batal
-                    </Button>
-                    <Button
+                    </button>
+                    <button
                         onClick={handleConfirmDelete}
                         className="bg-red-500 text-white hover:bg-red-600 rounded-xl font-bold px-5 py-2"
                     >
                         Hapus
-                    </Button>
+                    </button>
                 </div>
             </Modal>
         </Box>
