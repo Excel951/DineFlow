@@ -17,6 +17,7 @@ func NewDatabase() *gorm.DB {
 
 	db.AutoMigrate(
 		models.User{},
+		models.Role{},
 		models.Product{},
 		models.Order{},
 		models.Category{},
@@ -30,6 +31,8 @@ func NewDatabase() *gorm.DB {
 
 	sqlDB.SetMaxOpenConns(25)
 	sqlDB.SetMaxIdleConns(5)
+
+	// RunSeeder(db)
 
 	return db
 }

@@ -4,6 +4,7 @@ import (
 	"BackEndFlow/config"
 	"BackEndFlow/routes"
 	"log"
+	"os"
 
 	"github.com/joho/godotenv"
 
@@ -45,5 +46,5 @@ func main() {
 	// }))
 	config.NewDatabase()
 	routes.RegisterRouter(server)
-	server.Run("APP_PORT")
+	server.Run(":" + os.Getenv("APP_PORT"))
 }

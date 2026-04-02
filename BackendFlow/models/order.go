@@ -6,6 +6,13 @@ import (
 	"github.com/google/uuid"
 )
 
+const (
+	OrderStatusBaru     = 0
+	OrderStatusDiproses = 1
+	OrderStatusSelesai  = 2
+	OrderStatusBatal    = 3
+)
+
 type Order struct {
 	ID          uuid.UUID   `gorm:"type:uuid;primaryKey"`
 	OrderNumber string      `gorm:"type:varchar(20);uniqueIndex;not null"`

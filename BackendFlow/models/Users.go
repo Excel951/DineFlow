@@ -1,25 +1,30 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type User struct {
-	Id        int       `json:"id"`
-	Email     string    `json:"email"`
+	ID        uuid.UUID `json:"id" gorm:"primaryKey"`
+	Email     string    `json:"email" gorm:"unique"`
 	Name      string    `json:"name"`
-	Password  string    `json:"pasword"`
-	Role      string    `json:"role"`
+	Password  string    `json:"password"`
+	RoleID    int64     `json:"role_id" gorm:"index;not null"`
+	Role      Role      `json:"role" gorm:"foreignKey:RoleID"`
 	BirthDay  time.Time `json:"birth_day"`
-	createdAt time.Time
-	deletedAt *time.Time
+	CreatedAt time.Time
+	DeletedAt *time.Time
 }
 
-func NewUser(email string, password string, BirthDay time.Time) *User {
+func NewUser(email string, password string, Role int64, BirthDay time.Time) *User {
 	return &User{
 		Email:     email,
 		Password:  password,
-		Role:      "karyawan",
+		RoleID:    Role,
 		BirthDay:  BirthDay,
-		createdAt: time.Now(),
-		deletedAt: nil,
+		CreatedAt: time.Now(),
+		DeletedAt: nil,
 	}
 }
