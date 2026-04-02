@@ -44,7 +44,7 @@ func main() {
 	// 	// 6. Berapa lama browser boleh menyimpan hasil cek CORS ini (cache)
 	// 	MaxAge: 12 * time.Hour,
 	// }))
-	config.NewDatabase()
-	routes.RegisterRouter(server)
+	db := config.NewDatabase()
+	routes.RegisterRouter(server, db)
 	server.Run(":" + os.Getenv("APP_PORT"))
 }
