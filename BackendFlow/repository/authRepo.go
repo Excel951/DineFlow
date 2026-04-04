@@ -20,11 +20,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 
 func (r *userRepositoryImpl) FindEmail(email string) (*models.User, error) {
 	var user models.User
-	err := r.db.Raw(`
-	SELECT * FROM users
-	WHERE email = (?)
-	`, email).Scan(&user).Error
-
+	err := r.db.Preload("Role").Where("email = ?", email).First(&user).Error
 	if err != nil {
 		return nil, err
 	}

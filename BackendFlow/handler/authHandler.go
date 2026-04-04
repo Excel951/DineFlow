@@ -1,8 +1,9 @@
 package handler
 
 import (
-	"BackEndFlow/service"
 	"net/http"
+
+	"BackEndFlow/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -28,7 +29,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	token, err := h.authService.Login(req.Email, req.Password)
+	token, user, err := h.authService.Login(req.Email, req.Password)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
 		return
@@ -37,6 +38,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message": "Login berhasil",
 		"token":   token,
+		"User":    user,
 	})
 }
 

@@ -1,14 +1,16 @@
 package service
 
 import (
-	"BackEndFlow/repository"
 	"errors"
+
+	"BackEndFlow/models"
+	"BackEndFlow/repository"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthServer interface {
-	Login(email string, password string) (string, error)
+	Login(email string, password string) (string, models.User, error)
 }
 
 type authServiceImpl struct {
@@ -19,21 +21,21 @@ func NewAuthService(userRepo repository.UserRepository) AuthServer {
 	return &authServiceImpl{userRepo: userRepo}
 }
 
-func (s *authServiceImpl) Login(email string, password string) (string, error) {
+func (s *authServiceImpl) Login(email string, password string) (string, models.User, error) {
 	user, err := s.userRepo.FindEmail(email)
 	if err != nil {
-		return "", errors.New("email atau password salah")
+		return "", models.User{}, errors.New("email atau password salah")
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
-		return "", errors.New("email atau password salah")
+		return "", models.User{}, errors.New("email atau password salah")
 	}
 
 	token, err := GenerateJWT(user.Email, user.RoleID)
 	if err != nil {
-		return "", errors.New("gagal membuat token autentikasi")
+		return "", models.User{}, errors.New("gagal membuat token autentikasi")
 	}
 
-	return token, nil
+	return token, *user, nil
 }
