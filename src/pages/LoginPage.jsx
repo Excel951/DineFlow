@@ -1,14 +1,15 @@
 import { useActionState, useEffect } from "react";
 import Input from "../components/Input";
-import { Box, Paper, Typography, Button } from "@mui/material";
+import {Box, Button, Paper, Typography} from "@mui/material";
 import { authActions } from "../store/Auth-redux";
 import { loginAction } from "../actions/Auth-Actions";
 import { useDispatch, useSelector } from "react-redux";
+import {useNavigate} from "react-router";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
 
-  const { userName, password } = useSelector((state) => state.auth);
+  const { user, isLoggedIn } = useSelector((state) => state.auth);
 
   const [formState, formAction, isPending] = useActionState(loginAction, {
     error: null,
@@ -17,14 +18,21 @@ export default function LoginPage() {
 
   const errors = formState.errors;
 
-  console.log(formState);
-
   useEffect(() => {
     if (formState.success === true) {
-      dispatch(authActions.setUsername(formState.enteredValues.email));
-      dispatch(authActions.setPassword(formState.enteredValues.password));
+      dispatch(authActions.setUser(formState.user));
+      dispatch(authActions.login());
     }
   }, [formState, dispatch]);
+
+  const navigate = useNavigate();
+    useEffect(() => {
+        if (isLoggedIn) {
+            const lastPath = localStorage.getItem("lastPath");
+            const redirectPath = (lastPath && lastPath !== "/login") ? lastPath : "/staff/dashboard";
+            navigate(redirectPath, {replace: true});
+        }
+    }, [isLoggedIn, navigate]);
 
   return (
     <Box
@@ -60,19 +68,18 @@ export default function LoginPage() {
             Login Karyawan
           </Typography>
 
-          <Input label="email" name="email" defaultValue={userName} />
+          <Input label="email" name="email" defaultValue={user.user?.enteredValues ? user.user.enteredValues.email : ""} />
 
           <Input
             label="password"
             type="password"
             name="password"
-            defaultValue={password}
           />
           {errors
             ? errors.map((error) => <p style={{ color: "red" }}>{error}</p>)
             : null}
 
-          <button
+          <Button
             variant="contained"
             size="large"
             fullWidth
@@ -92,7 +99,7 @@ export default function LoginPage() {
             type="submit"
           >
             Login
-          </button>
+          </Button>
         </Paper>
       </form>
     </Box>

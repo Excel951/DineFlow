@@ -3,7 +3,7 @@ import { hashPassword } from "../utils/auth";
 import { SignUpSchema } from "../utils/staffSchema";
 import { hasMinLength, isEmail, isNotEmpty } from "../utils/validation";
 
-export function loginAction(prevFormState, formData) {
+export async function loginAction(prevFormState, formData) {
   const data = Object.fromEntries(formData);
   let errors = [];
 
@@ -26,14 +26,52 @@ export function loginAction(prevFormState, formData) {
     };
   }
 
-  return {
-    errors: null,
-    success: true,
-    enteredValues: {
-      email: data.email,
-      password: data.password,
-    },
-  };
+  try {
+    // Simulasi pengiriman data ke backend menggunakan fetch (Standar Industri)
+    // fetch aman digunakan karena merupakan native API browser yang modern.
+    const response = await fetch("http://localhost:6969/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: data.email,
+        password: data.password, // Data terenkripsi jika menggunakan HTTPS
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        errors: [errorData.message || "Login gagal, silakan cek kredensial Anda."],
+        success: false,
+        enteredValues: { email: data.email, password: data.password },
+      };
+    }
+
+    const resData = await response.json();
+
+    console.log("Login Success:", resData);
+
+    if (resData.token) {
+        localStorage.setItem("authToken", resData.token);
+    }
+
+    return {
+      errors: null,
+      success: true,
+      token: resData.token, // Simpan token di storage yang aman (misal: HttpOnly Cookie)
+      user: resData.User
+    };
+  } catch (error) {
+    console.log("Login Error:", error);
+    // Handle network errors atau issues lainnya
+    return {
+      errors: ["Koneksi ke server gagal. Silakan coba lagi nanti."],
+      success: false,
+      enteredValues: { email: data.email, password: data.password },
+    };
+  }
 }
 
 export async function signUpAction(prevState, formData) {

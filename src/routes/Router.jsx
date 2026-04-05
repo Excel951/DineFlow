@@ -3,6 +3,7 @@ import {createBrowserRouter, Navigate} from "react-router-dom";
 
 // import ProtectedRoute from "../components/ProtectedRoute";
 import NotFoundPage from "../pages/NotFoundPage.jsx";
+import ProtectedRoute from "../components/ProtectedRoute.jsx";
 
 const LoginPage = lazy(() => import("../pages/LoginPage"));
 const FoodMenu = lazy(() => import("../pages/FoodMenu"));
@@ -51,21 +52,21 @@ export const router = createBrowserRouter([
             {
                 path: "dashboard",
                 element: (
-                    // <ProtectedRoute allowedRoles={["staff", "admin"]}>
+                    <ProtectedRoute allowedRoles={["karyawan", "admin"]}>
                         <Suspense fallback={<LoadingFallback />}>
                             <StaffDashboard />
                         </Suspense>
-                    // </ProtectedRoute>
+                    </ProtectedRoute>
                 ),
             },
             {
                 path: "menu-management",
                 element: (
-                    // <ProtectedRoute allowedRoles={["karyawan", "admin"]}>
+                    <ProtectedRoute allowedRoles={["karyawan", "admin"]}>
                         <Suspense fallback={<LoadingFallback/>}>
                             <MenuManagement/>
                         </Suspense>
-                    // </ProtectedRoute>
+                    </ProtectedRoute>
                 )
             },
         ]
