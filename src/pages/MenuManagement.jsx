@@ -25,6 +25,9 @@ export default function MenuManagement() {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeCategory, setActiveCategory] = useState('All');
 
+    const [editingItem, setEditingItem] = useState(null);
+    const [deletingItem, setDeletingItem] = useState(null);
+
     const categories = ['All', 'Main', 'Pasta', 'Drink', 'Snack'];
 
     const filteredItems = menuItems.filter((item) => {
@@ -32,9 +35,6 @@ export default function MenuManagement() {
         const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
     })
-
-    const [editingItem, setEditingItem] = useState(null);
-    const [deletingItem, setDeletingItem] = useState(null);
 
     useEffect(() => {
         if (state.success && state.data) {
