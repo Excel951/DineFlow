@@ -1,9 +1,8 @@
 package handler
 
 import (
-	"net/http"
-
 	"BackEndFlow/service"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -38,7 +37,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message": "Login berhasil",
 		"token":   token,
-		"User":    user,
+		"role":    user.Role,
 	})
 }
 
