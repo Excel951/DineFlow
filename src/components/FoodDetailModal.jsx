@@ -13,11 +13,23 @@ export default function FoodDetailModal({ item, menuItems, onNavigate, onClose, 
     const allMenuItems = useSelector((state) => state.items.list);
 
     useEffect(() => {
-        if (topOfModalRef.current && item) {
-            setTimeout(() => {
-                topOfModalRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100)
-        }
+        const timer = setTimeout(() => {
+            if (topOfModalRef.current) {
+                const scrollContainer = topOfModalRef.current.closest('.overflow-y-auto');
+                if (scrollContainer) {
+                    scrollContainer.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    })
+                } else {
+                    topOfModalRef.current.scrollIntoView({
+                        behavior: 'smooth', block: 'start'
+                    })
+                }
+            }
+        }, 100)
+
+        return () => clearTimeout(timer);
     }, [item]);
 
     if (!item) return null;
@@ -33,10 +45,7 @@ export default function FoodDetailModal({ item, menuItems, onNavigate, onClose, 
         .slice(0, 4);
 
     return (
-        <Box className="pb-4">
-            {/* ANCHOR UNTUK SCROLL KE ATAS */}
-            <div ref={topOfModalRef} className="h-1 absolute top-0" />
-
+        <Box ref={topOfModalRef} className="pb-4">
             <div className="text-center mb-8 mt-2">
                 <Typography variant="h3" className="font-black text-gray-900 tracking-tight leading-tight text-3xl sm:text-4xl md:text-5xl">
                     {item.name}
