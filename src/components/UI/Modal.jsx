@@ -2,7 +2,7 @@ import {useImperativeHandle, useRef} from "react";
 import {createPortal} from "react-dom";
 import {X} from "lucide-react";
 
-export default function Modal({ref, children, title}) {
+export default function Modal({ref, children, title, maxWidthClass="sm:max-w-lg", hideFooter = false}) {
     const dialog = useRef();
 
     useImperativeHandle(ref, () => {
@@ -19,7 +19,7 @@ export default function Modal({ref, children, title}) {
     return createPortal(
         <dialog
             ref={dialog}
-            className="
+            className={`
                 backdrop:bg-black/50 backdrop:backdrop-blur-sm
                 w-full p-0 border-none shadow-2xl outline-none
                 /* Fix: Tambahkan mx-auto agar simetris di tengah */
@@ -27,9 +27,9 @@ export default function Modal({ref, children, title}) {
                 /* Mobile: Menempel di bawah */
                 mt-auto mb-0 rounded-t-3xl
                 /* PC: Tengah layar & lebar maksimal */
-                sm:my-auto sm:rounded-3xl sm:max-w-lg
+                sm:my-auto sm:rounded-3xl ${maxWidthClass}
                 animate-slide-up sm:animate-fade-in
-            "
+                `}
             onClick={(e) => {
                 // Menutup modal jika klik di area backdrop
                 if (e.target === dialog.current) dialog.current.close();
@@ -53,9 +53,9 @@ export default function Modal({ref, children, title}) {
                 </div>
 
                 {/* Action Button (Form Method Dialog) */}
-                <form method="dialog" className="mt-6">
+                <form method="dialog" className="mt-6" aria-disabled={hideFooter}>
                     <button
-                        className="w-full py-3 bg-gray-50 text-gray-500 rounded-xl font-bold active:bg-gray-100 transition">
+                        className={`w-full py-3 bg-gray-50 text-gray-500 rounded-xl font-bold active:bg-gray-100 transition ${hideFooter ? 'opacity-0' : ''}`}>
                         Kembali
                     </button>
                 </form>
