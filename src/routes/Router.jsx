@@ -1,5 +1,5 @@
 import React, {Suspense, lazy} from "react";
-import {createBrowserRouter, Navigate} from "react-router-dom";
+import {createBrowserRouter, Navigate, RouterProvider} from "react-router-dom";
 
 // import ProtectedRoute from "../components/ProtectedRoute";
 import NotFoundPage from "../pages/NotFoundPage.jsx";
@@ -10,12 +10,8 @@ const FoodMenu = lazy(() => import("../pages/FoodMenu"));
 const SignUpPage = lazy(() => import("../pages/SignUpPage.jsx"));
 const StaffDashboard = lazy(() => import("../pages/StaffDashboard.jsx"));
 const MenuManagement = lazy(() => import("../pages/MenuManagement.jsx"));
-
-const LoadingFallback = () => (
-    <div className="min-h-screen flex items-center justify-center text-gray-500">
-        Loading...
-    </div>
-);
+const AdminLayout = lazy(() => import("../components/layout/AdminLayout.jsx"));
+const LoadingFallback = lazy(() => import("../components/LoadingFallback.jsx"));
 
 export const router = createBrowserRouter([
     {
@@ -48,25 +44,26 @@ export const router = createBrowserRouter([
     },
     {
         path: "/staff",
+        element: (
+            <ProtectedRoute allowedRoles={["karyawan", "admin"]}>
+                <AdminLayout />
+            </ProtectedRoute>
+        ),
         children: [
+            {
+                index: true,
+                element: <Navigate to={"dashboard"} replace />,
+            },
             {
                 path: "dashboard",
                 element: (
-                    <ProtectedRoute allowedRoles={["karyawan", "admin"]}>
-                        <Suspense fallback={<LoadingFallback />}>
-                            <StaffDashboard />
-                        </Suspense>
-                    </ProtectedRoute>
+                    <StaffDashboard />
                 ),
             },
             {
                 path: "menu-management",
                 element: (
-                    <ProtectedRoute allowedRoles={["karyawan", "admin"]}>
-                        <Suspense fallback={<LoadingFallback/>}>
-                            <MenuManagement/>
-                        </Suspense>
-                    </ProtectedRoute>
+                    <MenuManagement />
                 )
             },
         ]

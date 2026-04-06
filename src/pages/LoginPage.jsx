@@ -1,7 +1,7 @@
 import { useActionState, useEffect } from "react";
 import Input from "../components/Input";
 import {Box, Button, Paper, Typography} from "@mui/material";
-import { authActions } from "../store/Auth-redux";
+import { authActions } from "../store/Auth-redux.js";
 import { loginAction } from "../actions/Auth-Actions";
 import { useDispatch, useSelector } from "react-redux";
 import {useNavigate} from "react-router";

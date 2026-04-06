@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {addItem, deleteItem, updateItem} from "../store/ItemSlice.js";
 import Modal from "../components/UI/Modal.jsx";
 import Input from "../components/Input.jsx";
-import {validateItemAction} from "../actions/ItemActions.jsx";
+import {validateItemAction} from "../actions/ItemActions.js";
 
 
 export default function MenuManagement() {
@@ -27,14 +27,6 @@ export default function MenuManagement() {
 
     const [editingItem, setEditingItem] = useState(null);
     const [deletingItem, setDeletingItem] = useState(null);
-
-    const categories = ['All', 'Main', 'Pasta', 'Drink', 'Snack'];
-
-    const filteredItems = menuItems.filter((item) => {
-        const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
-        const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesCategory && matchesSearch;
-    })
 
     useEffect(() => {
         if (state.success && state.data) {
@@ -58,6 +50,14 @@ export default function MenuManagement() {
             return same ? prev : state.errors;
         })
     }, [state?.errors])
+
+    const categories = ['All', 'Main', 'Pasta', 'Drink', 'Snack'];
+
+    const filteredItems = menuItems.filter((item) => {
+        const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
+        const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+    })
 
     const clearFormState = () => {
         setLocalErrors(null);

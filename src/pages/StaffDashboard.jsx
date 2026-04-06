@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Box, Button, Chip, Container, Grid, Paper, Tab, Tabs, Typography} from "@mui/material";
 import {BellRing, CheckCircle2, Clock, CookingPot, ShoppingBag} from "lucide-react";
-import {clearNotification, receiveNewOrder, updateOrderStatus} from "../store/orderSlice";
+import {clearNotification, receiveNewOrder, updateOrderStatus} from "../store/OrderSlice.js";
 import Items from "../Items.js";
 import {notificationSound} from "../utils/audio.js";
 
