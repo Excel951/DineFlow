@@ -6,7 +6,7 @@ import AuthLayout from "../components/AuthLayout";
 import AuthForm from "../components/AuthForm";
 import Input from "../components/Input";
 
-import { authActions } from "../store/Auth-redux";
+import { authActions } from "../store/Auth-redux.js";
 import { loginAction } from "../actions/Auth-Actions";
 
 export default function LoginPage() {

@@ -7,7 +7,7 @@ import { validateItemAction } from "../actions/ItemActions.jsx";
 import MenuCard from "../components/MenuCard.jsx";
 import MenuFilterBar from "../components/MenuFilterBar.jsx";
 import MenuFormModal from "../components/MenuFormModal.jsx";
-import MenuDeleteModal from "../components/MenuDeleteModal.jsx";
+import MenuDeleteModal from "../components/MenuDeleteModal.js";
 
 export default function MenuManagement() {
     const dispatch = useDispatch();
@@ -21,15 +21,9 @@ export default function MenuManagement() {
 
     const [searchQuery, setSearchQuery] = useState('');
     const [activeCategory, setActiveCategory] = useState('All');
+
     const [editingItem, setEditingItem] = useState(null);
     const [deletingItem, setDeletingItem] = useState(null);
-
-    const categories = ['All', 'Main', 'Pasta', 'Drink', 'Snack'];
-    const filteredItems = menuItems.filter((item) => {
-        const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
-        const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesCategory && matchesSearch;
-    });
 
     useEffect(() => {
         if (state.success && state.data) {
@@ -40,13 +34,30 @@ export default function MenuManagement() {
 
     useEffect(() => {
         if (!state?.errors) return;
-        setLocalErrors((prev) => JSON.stringify(prev) === JSON.stringify(state.errors) ? prev : state.errors);
-    }, [state?.errors]);
+
+        setLocalErrors((prev) => {
+            const same = JSON.stringify(prev) === JSON.stringify(state.errors);
+
+            return same ? prev : state.errors;
+        })
+    }, [state?.errors])
+
+    const categories = ['All', 'Main', 'Pasta', 'Drink', 'Snack'];
+
+    const filteredItems = menuItems.filter((item) => {
+        const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
+        const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+    })
+
+    const clearFormState = () => {
+        setLocalErrors(null);
+    }
 
     const handleOpenCreateModal = () => { setEditingItem(null); setDeletingItem(null); setLocalErrors(null); formModalRef.current.open(); };
     const handleOpenEditModal = (item) => { setEditingItem(item); setDeletingItem(null); setLocalErrors(null); formModalRef.current.open(); };
     const handleOpenDeleteModal = (itemId) => { setEditingItem(null); setDeletingItem(itemId); deleteModalRef.current.open(); };
-    
+
     const handleConfirmDelete = () => {
         if (deletingItem) dispatch(deleteItem(deletingItem));
         setDeletingItem(null);

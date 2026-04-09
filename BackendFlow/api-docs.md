@@ -35,16 +35,9 @@ Digunakan untuk masuk ke aplikasi dan mendapatkan token akses.
 {
   "message": "Login berhasil",
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "User": {
-    "id": "uuid-string",
-    "email": "user@example.com",
-    "name": "Nama User",
-    "role_id": 1,
-    "role": {
-       "id": 1,
-       "name": "Staff"
-    },
-    "birth_day": "2000-01-01T00:00:00Z"
+  "role": {
+     "id": 1,
+     "name": "Staff"
   }
 }
 ```
@@ -73,6 +66,18 @@ Digunakan untuk masuk ke aplikasi dan mendapatkan token akses.
 | `name` | String | Nama lengkap user |
 | `role_id` | Integer | ID Role user |
 | `birth_day` | ISO8601 String | Tanggal lahir user |
+
+### Product Object
+| Field | Type | Description |
+|---|---|---|
+| `id` | UUID | ID unik produk |
+| `sku` | String | Kode stok produk (unik) |
+| `name` | String | Nama produk |
+| `description` | String | Deskripsi produk |
+| `price` | Integer | Harga produk (Rupiah) |
+| `image_url` | String | URL gambar produk |
+| `is_available` | Boolean | Status ketersediaan produk |
+| `category_id` | String | ID Kategori produk |
 
 ---
 

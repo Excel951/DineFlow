@@ -1,6 +1,6 @@
 import {configureStore} from "@reduxjs/toolkit";
-import orderReducer from "./orderSlice";
-import authReducer from "./Auth-redux.jsx";
+import orderReducer from "./OrderSlice.js";
+import authReducer from "./Auth-redux.js";
 import itemReducer from "./ItemSlice.js";
 
 const store = configureStore(

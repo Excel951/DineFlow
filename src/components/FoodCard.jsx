@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 import QuantityControl from "./QuantityControl";
 import { useCart } from "../context/CartContext";
 
-export default function FoodCard({ item }) {
+export default function FoodCard({ item, onOpen }) {
   const cartCtx = useCart();
   const cartItem = cartCtx.cart.find((cartItem) => cartItem.id === item.id);
 
@@ -11,6 +11,7 @@ export default function FoodCard({ item }) {
     <div
       key={item.id}
       className="bg-white rounded-2xl p-3 flex gap-4 shadow-sm border border-gray-100"
+      onClick={() => onOpen(item)}
     >
       <img
         src={item.image}
@@ -24,7 +25,7 @@ export default function FoodCard({ item }) {
             Rp {item.price.toLocaleString()}
           </p>
         </div>
-        <div className="self-end">
+        <div className="self-end" onClick={(e) => e.stopPropagation()}>
           {cartItem ? (
             <QuantityControl quantity={cartItem.qty} item={item} />
           ) : (

@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Search } from "lucide-react";
 import Header from "../components/Header";
 import MenuList from "../components/MenuList";
 import CartSheet from "../components/CartSheet";
-import Items from "../Items.js";
 import { useCart } from "../context/CartContext.jsx";
+import Modal from "../components/UI/Modal.jsx";
+import FoodDetailModal from "../components/FoodDetailModal.jsx";
+import { useSelector } from "react-redux";
 
 const FoodMenu = () => {
     const cartCtx = useCart();
@@ -13,7 +15,7 @@ const FoodMenu = () => {
     const [debouncedQuery, setDebouncedQuery] = useState("");
 
     const categories = ["All", "Main", "Pasta", "Drink", "Snack"];
-    const menuItems = Items;
+    const menuItems = useSelector((state) => state.items.list);
 
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -37,9 +39,30 @@ const FoodMenu = () => {
         return matchesCategory && matchesSearch;
     });
 
+    const [selectedItem, setSelectedItem] = useState(null);
+    const detailModalRef = useRef();
+
+    const handleOpenDetail = (item) => {
+        setSelectedItem(item);
+        detailModalRef.current.open();
+    }
+
+    const handleCloseDetail = () => {
+        setSelectedItem(null);
+        detailModalRef.current.close();
+    }
+
+    const handleNavigateDetail = (newIndex) => {
+        setSelectedItem(menuItems[newIndex])
+    }
+
+    const handleSelectRecommendation = (item) => {
+        setSelectedItem(item);
+    }
+
     return (
         <div className="min-h-screen bg-gray-50 pb-24 font-sans">
-            <Header 
+            <Header
                 categories={categories}
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
@@ -56,10 +79,25 @@ const FoodMenu = () => {
                     <p className="text-sm text-gray-500 mt-1">Coba cari dengan kata kunci lain atau ganti kategori.</p>
                 </div>
             ) : (
-                <MenuList menuItems={filteredMenuItems} />
+                <MenuList menuItems={filteredMenuItems} onOpen={handleOpenDetail} />
             )}
 
             <CartSheet totalHarga={totalHarga} totalItem={totalItem} />
+
+            <Modal
+                title=""
+                hideFooter={true}
+                ref={detailModalRef}
+                maxWidthClass={"sm:max-w-4xl w-full"}
+            >
+                <FoodDetailModal
+                    item={selectedItem}
+                    onClose={handleCloseDetail}
+                    onNavigate={handleNavigateDetail}
+                    onSelectRecommendation={handleSelectRecommendation}
+                    menuItems={filteredMenuItems}
+                />
+            </Modal>
         </div>
     );
 };

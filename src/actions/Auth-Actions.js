@@ -4,29 +4,29 @@ import { SignUpSchema } from "../utils/staffSchema";
 import { hasMinLength, isEmail, isNotEmpty } from "../utils/validation";
 
 export async function loginAction(prevFormState, formData) {
-  const data = Object.fromEntries(formData);
-  let errors = [];
-
-  if (!isNotEmpty(data.email) && !isEmail(data.email) && !hasMinLength()) {
-    errors.push("Email tidak valid");
-  }
-
-  if (!isNotEmpty(data.password) && !hasMinLength(data.password, 6)) {
-    errors.push("Isi Email dan Password");
-  }
-
-  if (errors.length > 0) {
-    return {
-      errors,
-      success: false,
-      enteredValues: {
-        email: data.email,
-        password: data.password,
-      },
-    };
-  }
-
   try {
+    const data = Object.fromEntries(formData);
+    let errors = [];
+
+    if (!isNotEmpty(data.email) && !isEmail(data.email) && !hasMinLength()) {
+      errors.push("Email tidak valid");
+    }
+
+    if (!isNotEmpty(data.password) && !hasMinLength(data.password, 6)) {
+      errors.push("Isi Email dan Password");
+    }
+
+    if (errors.length > 0) {
+      return {
+        errors,
+        success: false,
+        enteredValues: {
+          email: data.email,
+          password: data.password,
+        },
+      };
+    }
+
     // Simulasi pengiriman data ke backend menggunakan fetch (Standar Industri)
     // fetch aman digunakan karena merupakan native API browser yang modern.
     const response = await fetch("http://localhost:6969/api/login", {
