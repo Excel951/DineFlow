@@ -8,7 +8,7 @@ export default function ProtectedRoute({children, allowedRoles = []}) {
     const auth = useSelector((state) => state.auth);
 
     const isLoggedIn = auth?.isLoggedIn;
-    const userRole = auth?.user?.role?.name.toLowerCase();
+    const userRole = localStorage.getItem("role") || auth?.role;
 
     console.log("ProtectedRoute - Status:", {isLoggedIn, userRole, allowedRoles});
 

@@ -9,7 +9,7 @@ import {useNavigate} from "react-router";
 export default function LoginPage() {
   const dispatch = useDispatch();
 
-  const { user, isLoggedIn } = useSelector((state) => state.auth);
+  const { isLoggedIn } = useSelector((state) => state.auth);
 
   const [formState, formAction, isPending] = useActionState(loginAction, {
     error: null,
@@ -20,8 +20,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (formState.success === true) {
-      dispatch(authActions.setUser(formState.user));
-      dispatch(authActions.login());
+      dispatch(authActions.login(formState.role.name));
     }
   }, [formState, dispatch]);
 
@@ -68,7 +67,7 @@ export default function LoginPage() {
             Login Karyawan
           </Typography>
 
-          <Input label="email" name="email" defaultValue={user.user?.enteredValues ? user.user.enteredValues.email : ""} />
+          <Input label="email" name="email" defaultValue={formState?.enteredValues ? formState?.enteredValues.email : ""} />
 
           <Input
             label="password"

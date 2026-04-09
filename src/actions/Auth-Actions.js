@@ -2,6 +2,9 @@ import z from "zod";
 import { hashPassword } from "../utils/auth";
 import { SignUpSchema } from "../utils/staffSchema";
 import { hasMinLength, isEmail, isNotEmpty } from "../utils/validation";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export async function loginAction(prevFormState, formData) {
   try {
@@ -29,7 +32,8 @@ export async function loginAction(prevFormState, formData) {
 
     // Simulasi pengiriman data ke backend menggunakan fetch (Standar Industri)
     // fetch aman digunakan karena merupakan native API browser yang modern.
-    const response = await fetch("http://localhost:6969/api/login", {
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+    const response = await fetch(`${BACKEND_URL}/api/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -61,7 +65,8 @@ export async function loginAction(prevFormState, formData) {
       errors: null,
       success: true,
       token: resData.token, // Simpan token di storage yang aman (misal: HttpOnly Cookie)
-      user: resData.User
+      // user: resData.User
+      role: resData.role,
     };
   } catch (error) {
     console.log("Login Error:", error);
@@ -69,7 +74,7 @@ export async function loginAction(prevFormState, formData) {
     return {
       errors: ["Koneksi ke server gagal. Silakan coba lagi nanti."],
       success: false,
-      enteredValues: { email: data.email, password: data.password },
+      enteredValues: { email: this.data.email, password: this.data.password },
     };
   }
 }
