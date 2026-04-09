@@ -156,13 +156,13 @@ export default function StaffDashboard() {
                       </button>
                     )}
                     {order.status === 1 && (
-                      <Button
+                      <button
                         fullWidth variant="contained"
-                        className="bg-green-600 hover:bg-green-700 rounded-xl py-3 font-bold capitalize shadow-green-200 shadow-lg"
+                        className="bg-green-500 hover:bg-green-600 text-white rounded-xl p-3 font-bold capitalize shadow-green-200 shadow-lg"
                         onClick={() => dispatch(updateOrderStatus({ id: order.id, status: 2 }))}
                       >
                         Makanan Siap Diantar
-                      </Button>
+                      </button>
                     )}
                   </div>
                 </Paper>
