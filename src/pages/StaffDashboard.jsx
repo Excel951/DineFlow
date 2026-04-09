@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Button, Chip, Container, Grid, Paper, Tab, Tabs, Typography } from "@mui/material";
-import { BellRing, CheckCircle2, Clock, CookingPot, ShoppingBag } from "lucide-react";
-import { clearNotification, receiveNewOrder, updateOrderStatus } from "../store/OrderSlice.js";
-import Items from "../Items.js";
+import { Box, Container, Grid, Typography } from "@mui/material";
+import { ShoppingBag } from "lucide-react";
+import { clearNotification, receiveNewOrder } from "../store/OrderSlice.js";
+import StaffDashboardOrderCard from "../components/StaffDashboardOrderCard";
+import StaffDashboardHeader from "../components/StaffDashboardHeader";
 import { notificationSound } from "../utils/audio.js";
-
 
 export default function StaffDashboard() {
   const dispatch = useDispatch();
-
   const orders = useSelector((state) => state.orders.list);
   const hasNewOrder = useSelector((state) => state.orders.hasNewOrder);
-
   const [tabValue, setTabValue] = useState(0);
 
   useEffect(() => {
@@ -44,6 +42,7 @@ export default function StaffDashboard() {
   }
 
   const filteredOrders = orders.filter(order => order.status === tabValue);
+  const newOrdersCount = orders.filter(o => o.status === 0).length;
 
   return (
     <Box className="min-h-screen bg-gray-50 pb-10">
@@ -157,13 +156,13 @@ export default function StaffDashboard() {
                       </button>
                     )}
                     {order.status === 1 && (
-                      <Button
+                      <button
                         fullWidth variant="contained"
-                        className="bg-green-600 hover:bg-green-700 rounded-xl py-3 font-bold capitalize shadow-green-200 shadow-lg"
+                        className="bg-green-500 hover:bg-green-600 text-white rounded-xl p-3 font-bold capitalize shadow-green-200 shadow-lg"
                         onClick={() => dispatch(updateOrderStatus({ id: order.id, status: 2 }))}
                       >
                         Makanan Siap Diantar
-                      </Button>
+                      </button>
                     )}
                   </div>
                 </Paper>
