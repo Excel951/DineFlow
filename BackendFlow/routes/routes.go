@@ -15,12 +15,15 @@ func RegisterRouter(server *gin.Engine, db *gorm.DB) {
 
 	// 1. Buat Repository (Penjaga Gudang)
 	userRepo := repository.NewUserRepository(db)
+	categoryRepo := repository.NewCategoryRepository(db)
 
 	// 2. Buat Service (Manajer) -> Suntikkan Repo ke dalamnya
 	authService := service.NewAuthService(userRepo)
+	categoryService := service.NewCategoryService(categoryRepo)
 
 	// 3. Buat Handler (Pelayan) -> Suntikkan Service ke dalamnya
 	authHandler := handler.NewAuthHandler(authService)
+	categoryHandler := handler.NewCategoryHandler(categoryService)
 
 	// --- SETUP ROUTING GIN ---
 
@@ -34,6 +37,7 @@ func RegisterRouter(server *gin.Engine, db *gorm.DB) {
 		{
 			// Sekarang /api/profile dikawal oleh middleware
 			protected.POST("/profile", authHandler.Profile)
+			protected.GET("/categories", categoryHandler.GetCategory)
 		}
 	}
 }

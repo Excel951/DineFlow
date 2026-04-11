@@ -9,7 +9,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type AuthServer interface {
+type AuthService interface {
 	Login(email string, password string) (string, models.User, error)
 	Profile(email string) (models.User, error)
 }
@@ -18,7 +18,7 @@ type authServiceImpl struct {
 	userRepo repository.UserRepository
 }
 
-func NewAuthService(userRepo repository.UserRepository) AuthServer {
+func NewAuthService(userRepo repository.UserRepository) AuthService {
 	return &authServiceImpl{userRepo: userRepo}
 }
 

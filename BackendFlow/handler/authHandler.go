@@ -14,10 +14,10 @@ type LoginRequest struct {
 }
 
 type AuthHandler struct {
-	authService service.AuthServer
+	authService service.AuthService
 }
 
-func NewAuthHandler(authService service.AuthServer) *AuthHandler {
+func NewAuthHandler(authService service.AuthService) *AuthHandler {
 	return &AuthHandler{authService: authService}
 }
 
@@ -64,5 +64,5 @@ func (h *AuthHandler) Profile(c *gin.Context) {
 }
 
 // func SignUp() {
-
+//
 // }
