@@ -36,9 +36,9 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"message": "Login berhasil",
-		"token":   token,
-		"role":    user.Role,
+		"info":  ResStatus{Status: "success", Message: "Login berhasil"},
+		"token": token,
+		"role":  user.Role,
 	})
 }
 
@@ -56,7 +56,11 @@ func (h *AuthHandler) Profile(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Email tidak ada"})
 	}
 
-	c.JSON(200, gin.H{"nama": user.Name, "email": user.Name, "role": user.Role.Name, "BirthDay": user.BirthDay})
+	c.JSON(200, gin.H{
+		"info": ResStatus{Status: "success", Message: "Data berhasil di dapat"}, "data": gin.H{
+			"nama": user.Name, "email": user.Name, "role": user.Role.Name, "BirthDay": user.BirthDay,
+		},
+	})
 }
 
 // func SignUp() {
