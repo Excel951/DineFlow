@@ -1,9 +1,11 @@
 package config
 
 import (
-	"BackEndFlow/models"
 	"log"
+	"os"
 	"time"
+
+	"BackEndFlow/models"
 
 	// Sesuaikan dengan nama modul project Anda
 
@@ -24,7 +26,6 @@ func RunSeeder(db *gorm.DB) {
 		err := db.Where("name = ?", roleName).FirstOrCreate(&role, models.Role{
 			Name: roleName,
 		}).Error
-
 		if err != nil {
 			log.Fatalf("Gagal melakukan seed role %s: %v", roleName, err)
 		}
@@ -35,14 +36,15 @@ func RunSeeder(db *gorm.DB) {
 	db.Where("name = ?", "admin").First(&adminRole)
 
 	// 3. Hash Password untuk Super User
-	passwordString := "Sembarangwes214101000452141010002921410100027@ashiap" // Ganti dengan password yang lebih kuat nanti
+	passwordString := os.Getenv("SUPER_USER_PASSWORD") // Ganti dengan password yang lebih kuat nanti
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(passwordString), bcrypt.DefaultCost)
 	if err != nil {
 		log.Fatalf("Gagal melakukan hash password: %v", err)
 	}
 
 	// 4. Seed Super User (Admin)
-	adminEmail := "superadmin@resto.com"
+	adminEmail := os.Getenv("SUPER_USER_EMAIL")
+
 	var superUser models.User
 
 	// Cek apakah admin dengan email ini sudah ada
@@ -55,9 +57,78 @@ func RunSeeder(db *gorm.DB) {
 		BirthDay:  time.Now(),
 		CreatedAt: time.Now(),
 	}).Error
-
 	if err != nil {
 		log.Fatalf("Gagal melakukan seed super user: %v", err)
+	}
+
+	log.Println("Seeding Categories & Products...")
+
+	// 5. Seed Categories
+	// Kita buat map untuk menyimpan ID kategori agar mudah dipanggil saat seed product
+	categories := []models.Category{
+		{Name: "Makanan Berat", Description: "Menu nasi dan lauk utama"},
+		{Name: "Minuman", Description: "Segala jenis minuman segar"},
+		{Name: "Cemilan", Description: "Snack dan makanan ringan"},
+	}
+
+	categoryMap := make(map[string]uuid.UUID)
+
+	for _, cat := range categories {
+		var existingCat models.Category
+		// Cek berdasarkan nama kategori
+		err := db.Where("name = ?", cat.Name).FirstOrCreate(&existingCat, models.Category{
+			ID:          uuid.New(),
+			Name:        cat.Name,
+			Description: cat.Description,
+		}).Error
+		if err != nil {
+			log.Printf("Gagal seed kategori %s: %v", cat.Name, err)
+			continue
+		}
+		// Simpan ID yang aktif (baik yang baru dibuat atau yang sudah ada) ke map
+		categoryMap[cat.Name] = existingCat.ID
+	}
+
+	// 6. Seed Products
+	products := []models.Product{
+		{
+			Name:        "Nasi Goreng DineFlow",
+			SKU:         "FOOD-001",
+			Price:       25000,
+			CategoryID:  categoryMap["Makanan Berat"],
+			IsAvailable: true,
+		},
+		{
+			Name:        "Es Jeruk Peras",
+			SKU:         "DRINK-001",
+			Price:       8000,
+			CategoryID:  categoryMap["Minuman"],
+			IsAvailable: true,
+		},
+		{
+			Name:        "Kentang Goreng",
+			SKU:         "SNACK-001",
+			Price:       15000,
+			CategoryID:  categoryMap["Cemilan"],
+			IsAvailable: true,
+		},
+	}
+
+	for _, prod := range products {
+		var existingProd models.Product
+		// Cek berdasarkan SKU (karena SKU unik)
+		err := db.Where("sku = ?", prod.SKU).FirstOrCreate(&existingProd, models.Product{
+			ID:          uuid.New(),
+			SKU:         prod.SKU,
+			Name:        prod.Name,
+			Price:       prod.Price,
+			CategoryID:  prod.CategoryID,
+			IsAvailable: prod.IsAvailable,
+			CreatedAt:   time.Now(),
+		}).Error
+		if err != nil {
+			log.Printf("Gagal seed produk %s: %v", prod.Name, err)
+		}
 	}
 
 	log.Println("Database Seeder selesai dijalankan!")

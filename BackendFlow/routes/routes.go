@@ -36,7 +36,7 @@ func RegisterRouter(server *gin.Engine, db *gorm.DB) {
 		protected.Use(middleware.AuthMiddleware())
 		{
 			// Sekarang /api/profile dikawal oleh middleware
-			protected.POST("/profile", authHandler.Profile)
+			protected.GET("/profile", authHandler.Profile)
 			protected.GET("/categories", categoryHandler.GetCategory)
 		}
 	}

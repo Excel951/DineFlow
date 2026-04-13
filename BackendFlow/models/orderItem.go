@@ -6,12 +6,13 @@ import (
 
 type OrderItem struct {
 	ID           uuid.UUID `gorm:"type:uuid;primaryKey"`
-	OrderID      uuid.UUID `gorm:"type:uuid;not null;index"`
-	ProductID    uuid.UUID `gorm:"type:uuid;not null"`
+	OrderID      uuid.UUID `json:"order_id" gorm:"type:uuid;not null;index"`
+	Order        Order     `gorm:"foreignKey:OrderID"`
+	ProductID    uuid.UUID `json:"product_id" gorm:"type:uuid;not null"`
 	Product      Product   `gorm:"foreignKey:ProductID"` // Relasi Belongs To
-	Quantity     int       `gorm:"not null;default:1"`
-	PriceAtOrder int64     `gorm:"not null"`
-	Notes        string    `gorm:"type:text"`
+	Quantity     int       `json:"quantity" gorm:"not null;default:1"`
+	PriceAtOrder int64     `json:"price_at_order" gorm:"not null"`
+	Notes        string    `json:"notes" gorm:"type:text"`
 }
 
 func NewOrderItem(orderID uuid.UUID, productID uuid.UUID, qty int, price int64, notes string) *OrderItem {

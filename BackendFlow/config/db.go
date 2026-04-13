@@ -1,8 +1,9 @@
 package config
 
 import (
-	"BackEndFlow/models"
 	"os"
+
+	"BackEndFlow/models"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -10,27 +11,29 @@ import (
 
 func NewDatabase() *gorm.DB {
 	db, err := gorm.Open(sqlite.Open(os.Getenv("DB_PATH")), &gorm.Config{})
-
 	if err != nil {
 		panic(err)
 	}
 
-	db.AutoMigrate(
+	err = db.AutoMigrate(
 		models.User{},
 		models.Role{},
+		models.Category{},
 		models.Product{},
 		models.Order{},
-		models.Category{},
 		models.OrderItem{},
 	)
-
-	sqlDB, err := db.DB()
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 
-	sqlDB.SetMaxOpenConns(25)
-	sqlDB.SetMaxIdleConns(5)
+	sqldb, err := db.DB()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	sqldb.SetConnMaxLifetime(25)
+	sqldb.SetConnMaxIdleTime(5)
 
 	// RunSeeder(db)
 

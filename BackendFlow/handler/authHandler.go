@@ -58,7 +58,7 @@ func (h *AuthHandler) Profile(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"info": ResStatus{Status: "success", Message: "Data berhasil di dapat"}, "data": gin.H{
-			"nama": user.Name, "email": user.Name, "role": user.Role.Name, "BirthDay": user.BirthDay,
+			"nama": user.Name, "email": user.Name, "role": user.Role, "BirthDay": user.BirthDay,
 		},
 	})
 }

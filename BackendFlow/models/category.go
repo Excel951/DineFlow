@@ -4,9 +4,9 @@ import "github.com/google/uuid"
 
 type Category struct {
 	ID          uuid.UUID `gorm:"type:uuid;primaryKey"`
-	Name        string    `gorm:"type:varchar(50);uniqueIndex;not null"`
-	Description string    `gorm:"type:text"`
-	Products    []Product `gorm:"foreignKey:CategoryID"`
+	Name        string    `json:"name" gorm:"type:varchar(50);uniqueIndex;not null"`
+	Description string    `json:"desc" gorm:"type:text"`
+	Products    []Product `gorm:"foreignKey:CategoryID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
 }
 
 func NewCategory(name string, description string) *Category {
